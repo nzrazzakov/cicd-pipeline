@@ -15,7 +15,7 @@ pipeline {
 
     stage('Docker Image Build') {
       steps {
-        sh 'docker build -t nzrazzakov/jenkinscicd'
+        sh 'docker build -t nzrazzakov/jenkinscicd .'
       }
     }
 
