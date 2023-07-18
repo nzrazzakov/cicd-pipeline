@@ -22,7 +22,7 @@ pipeline {
 
     stage('Buld Docker Image') {
       steps {
-        sh 'docker build nzrazzakov/jenkinscicd .'
+        sh 'docker build -t nzrazzakov/jenkinscicd .'
       }
     }
 
