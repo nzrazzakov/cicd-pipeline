@@ -24,8 +24,8 @@ pipeline {
         script {
           docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_creds')
           {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
+            dockerImage.push("${env.BUILD_NUMBER}")
+            dockerImage.push("latest")
           }
         }
 
