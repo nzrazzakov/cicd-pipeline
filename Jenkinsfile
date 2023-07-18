@@ -15,7 +15,10 @@ pipeline {
 
     stage('Docker Image Build') {
       steps {
-        sh 'docker build -t nzrazzakov/jenkinscicd .'
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+
       }
     }
 
@@ -24,13 +27,17 @@ pipeline {
         script {
           docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_creds')
           {
-            Image.push("${env.BUILD_NUMBER}")
-            Image.push("latest")
+            dockerImage.push()
           }
         }
 
       }
     }
 
+  }
+  environment {
+    registry = 'nzrazzakov/cicdjenkins'
+    registryCredential = 'dockerhub_creds'
+    dockerImage = ''
   }
 }
