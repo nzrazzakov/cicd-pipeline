@@ -6,10 +6,6 @@ pipeline {
         DOCKERVERSION = '18.03.1-ce'
       }
       steps {
-        sh '''curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKERVERSION}.tgz \\
-  && tar xzvf docker-${DOCKERVERSION}.tgz --strip 1 \\
-                 -C /usr/local/bin docker/docker \\
-  && rm docker-${DOCKERVERSION}.tgz'''
         sh 'script scripts/build.sh'
       }
     }
@@ -22,9 +18,28 @@ pipeline {
 
     stage('Buld Docker Image') {
       steps {
-        sh 'docker build -t nzrazzakov/jenkinscicd .'
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+
       }
     }
 
+    stage('Push') {
+      steps {
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()}
+          }
+
+          sh 'sh "docker rmi $registry:$BUILD_NUMBER"'
+        }
+      }
+
+    }
+    environment {
+      registry = 'nzrazzakov/cicdjenkins'
+      registryCredential = 'dckr_pat_llIGArmeP2riHvIK4VPOORse43I'
+      dockerImage = ''
+    }
   }
-}
