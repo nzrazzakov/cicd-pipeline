@@ -22,8 +22,11 @@ pipeline {
     stage('Docker Image Push') {
       steps {
         script {
-          docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_creds') {image.push("${env.BUILD_NUMBER}")
-          image.push("latest")}
+          docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_creds')
+          {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+          }
         }
 
       }
